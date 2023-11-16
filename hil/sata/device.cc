@@ -117,7 +117,10 @@ Device::Device(HBA *p, DMAInterface *d, ConfigReader &c)
 
 Device::~Device() {
   delete pHIL;
-  delete pDisk;
+  if (pDisk) {
+    delete pDisk;
+    pDisk = nullptr;
+  }
 }
 
 void Device::init() {

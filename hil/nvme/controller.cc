@@ -24,6 +24,7 @@
 
 #include "hil/nvme/interface.hh"
 #include "hil/nvme/ocssd.hh"
+#include "hil/nvme/zns.hh"
 #include "hil/nvme/subsystem.hh"
 #include "util/algorithm.hh"
 #include "util/fifo.hh"
@@ -121,6 +122,7 @@ Controller::Controller(Interface *intrface, ConfigReader &c)
   uint16_t vid, ssvid;
 
   bUseOCSSD = false;
+  bUseZNS = false;
   pParent->getVendorID(vid, ssvid);
 
   if (vid == OCSSD_VENDOR) {
@@ -137,6 +139,18 @@ Controller::Controller(Interface *intrface, ConfigReader &c)
         break;
       default:
         panic("nvme_ctrl: Invalid SSVID for Open-Channel SSD");
+
+        break;
+    }
+  } else if (vid == ZNS_VENDOR) {
+    bUseZNS = true;
+
+    switch (ssvid) {
+      case ZNS_SSVID:
+        pSubsystem = new ZnsSSD(this, cfgdata);
+        break;
+      default:
+        panic("nvme_ctrl: Invalid SSVID for ZNS SSD");
 
         break;
     }
@@ -680,6 +694,8 @@ void Controller::identify(uint8_t *data) {
     // Model Number
     if (bUseOCSSD) {
       memcpy(data + 0x0018, "SimpleSSD OCSSD Controller by CAMELab   ", 0x28);
+    } else if (bUseZNS) {
+      memcpy(data + 0x0018, "SimpleSSD ZNS   Controller              ", 0x28);
     }
     else {
       memcpy(data + 0x0018, "SimpleSSD NVMe Controller by CAMELab    ", 0x28);
@@ -847,6 +863,8 @@ void Controller::identify(uint8_t *data) {
       // [01:01] 1 for Support Format NVM command
       // [00:00] 1 for Support Security Send and Security Receive commands
       if (bUseOCSSD) {
+        data[0x0100] = 0x00;
+      } else if (bUseZNS) {
         data[0x0100] = 0x00;
       }
       else {
@@ -1598,6 +1616,8 @@ void Controller::handleRequest(uint64_t now) {
 
     if (bUseOCSSD) {
       execute(CPU::NVME__OCSSD, CPU::SUBMIT_COMMAND, doSubmit, front);
+    } else if (bUseZNS) {
+      execute(CPU::NVME__ZNS, CPU::SUBMIT_COMMAND, doSubmit, front);
     }
     else {
       execute(CPU::NVME__SUBSYSTEM, CPU::SUBMIT_COMMAND, doSubmit, front);

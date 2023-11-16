@@ -56,7 +56,10 @@ OpenChannelSSD12::~OpenChannelSSD12() {
   }
 
   delete pPALOLD;
-  delete pDisk;
+  if (pDisk) {
+    delete pDisk;
+    pDisk = nullptr;
+  }
 }
 
 void OpenChannelSSD12::init() {

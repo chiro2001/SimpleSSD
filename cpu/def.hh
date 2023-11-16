@@ -40,6 +40,7 @@ typedef enum : uint16_t {
   NVME__SUBSYSTEM,
   NVME__NAMESPACE,
   NVME__OCSSD,
+  NVME__ZNS,
   UFS__DEVICE,
   SATA__DEVICE,
 } NAMESPACE;

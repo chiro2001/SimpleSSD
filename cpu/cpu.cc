@@ -155,6 +155,7 @@ CPU::CPU(ConfigReader &c) : conf(c), lastResetStat(0) {
   cpi.insert({NVME__SUBSYSTEM, std::unordered_map<uint16_t, InstStat>()});
   cpi.insert({NVME__NAMESPACE, std::unordered_map<uint16_t, InstStat>()});
   cpi.insert({NVME__OCSSD, std::unordered_map<uint16_t, InstStat>()});
+  cpi.insert({NVME__ZNS, std::unordered_map<uint16_t, InstStat>()});
   cpi.insert({UFS__DEVICE, std::unordered_map<uint16_t, InstStat>()});
   cpi.insert({SATA__DEVICE, std::unordered_map<uint16_t, InstStat>()});
 
@@ -695,6 +696,7 @@ void CPU::execute(NAMESPACE ns, FUNCTION fct, DMAFunction &func, void *context,
     case NVME__SUBSYSTEM:
     case NVME__NAMESPACE:
     case NVME__OCSSD:
+    case NVME__ZNS:
     case UFS__DEVICE:
     case SATA__DEVICE:
       if (hilCore.size() > 0) {
@@ -756,6 +758,7 @@ uint64_t CPU::applyLatency(NAMESPACE ns, FUNCTION fct) {
     case NVME__SUBSYSTEM:
     case NVME__NAMESPACE:
     case NVME__OCSSD:
+    case NVME__ZNS:
     case UFS__DEVICE:
     case SATA__DEVICE:
       if (hilCore.size() > 0) {

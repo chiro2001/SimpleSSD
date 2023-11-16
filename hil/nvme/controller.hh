@@ -75,6 +75,7 @@ class Controller : public StatObject {
   AbstractSubsystem *pSubsystem;  //!< NVMe::Subsystem allocate in constructor
 
   bool bUseOCSSD;
+  bool bUseZNS;
 
   SimpleSSD::DMAInterface *pcieFIFO;
   SimpleSSD::DMAInterface *interconnect;

@@ -41,6 +41,7 @@ Namespace::Namespace(Subsystem *p, ConfigData &c)
 Namespace::~Namespace() {
   if (pDisk) {
     delete pDisk;
+    pDisk = nullptr;
   }
 }
 

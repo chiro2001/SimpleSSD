@@ -44,6 +44,9 @@ namespace NVMe {
 #define OCSSD_SSVID_1_2 0x0102
 #define OCSSD_SSVID_2_0 0x0200
 
+#define ZNS_VENDOR 0x8086
+#define ZNS_SSVID 0x0100
+
 typedef union _HealthInfo {
   uint8_t data[0x200];
   struct {

@@ -106,6 +106,7 @@ set(SRC_HIL_NVME
   hil/nvme/dma.cc
   hil/nvme/namespace.cc
   hil/nvme/ocssd.cc
+  hil/nvme/zns.cc
   hil/nvme/queue.cc
   hil/nvme/subsystem.cc
 )

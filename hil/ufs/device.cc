@@ -283,7 +283,10 @@ Device::Device(DMAInterface *d, ConfigReader &c)
 
 Device::~Device() {
   delete pHIL;
-  delete pDisk;
+  if (pDisk) {
+    delete pDisk;
+    pDisk = nullptr;
+  }
 }
 
 void Device::processQueryCommand(UPIUQueryReq *req, UPIUQueryResp *resp) {
